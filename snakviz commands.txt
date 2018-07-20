@@ -1,0 +1,2 @@
+ python -m cProfile -o program.prof callmodule.py
+ snakeviz program.prof
