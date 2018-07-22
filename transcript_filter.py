@@ -83,7 +83,5 @@ def filtered_transcripts(df, num_transcripts, desired_num_interactions):
     df['active_session'] = df['number_of_interactions'].map(lambda x: x>=desired_num_interactions)
     df['talk_boolean'] = df.apply(talk_boolean, axis=1)
     df['wb_boolean'] = df['wb_message_count'].map(lambda x: x>3)
-    df.to_csv('New_Columns.csv')
     df = filter(df, num_transcripts, desired_num_interactions)
-    df.to_csv('Filtered.csv')
     return df
