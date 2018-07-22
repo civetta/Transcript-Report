@@ -1,6 +1,7 @@
 import numpy as np
 import re
 import pandas as pd
+import os
 
 
 def talk_boolean(row):
@@ -87,3 +88,11 @@ def filtered_transcripts(df, num_transcripts, desired_num_interactions):
     df = filter(df, num_transcripts, desired_num_interactions)
     df.to_csv('Filtered.csv')
     return df
+
+
+num_transcripts = 50
+desired_num_interactions = 3
+os.system('attrib +H *.pyc /S') #Hides .pyc file in direcory
+df = pd.read_csv('data_source/RawPeriscope.csv')
+date = pd.read_csv('data_source/date2.csv')
+df = filtered_transcripts(df, num_transcripts, desired_num_interactions)
