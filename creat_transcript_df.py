@@ -19,7 +19,7 @@ def create_transcript_df(row, teacher_df, teachername):
     transcript = row['transcript'].split('\n')
     trans_df = create_trandsdf(transcript, teach_handle, stud_handle)
     trans_df = create_marked_lines(trans_df)
-    #paste_transcript(trans_ws, trans_df, wb_count, lesson_name)
+    paste_transcript(trans_ws, trans_df, wb_count, lesson_name)
     #teacherbook.save('teacher_sheets/'+teachername+'.xlsx')
 
 

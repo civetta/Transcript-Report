@@ -54,7 +54,7 @@ def filtered_transcripts(df, num_transcripts, desired_num_interactions):
     df['type_boolean'] = df['transcript'].str.extract(find_talk).FULL
     df['type_boolean'].fillna(True, inplace=True)
     df['number_of_interactions'] = df.apply(active_session, axis=1)
-    df['active_session'] = df['number_of_interactions'].map(lambda x: x>=desired_num_interactions)
+    df['active_session'] = df['number_of_interactions'].map(lambda x: x >= desired_num_interactions)
     df = filter(df, num_transcripts, desired_num_interactions)
     df['wb_boolean'] = df['wb_message_count'].map(lambda x: x>3)
     return df
