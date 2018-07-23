@@ -2,42 +2,6 @@ import numpy as np
 import re
 import pandas as pd
 
-
-def talk_boolean(row):
-    student_handle = row['student_handle']
-    transcript = row['transcript']
-    if student_handle is not None:
-        transcript = transcript.split('\n')
-        for line in transcript:
-                if student_handle in line:
-                    talk_string = 'Talk|voice|speak|spek|talkk|taalk|tack'
-                    if re.search(talk_string, line, re.IGNORECASE) is not None:
-                        return True
-        else:
-            return False
-    return False
-
-
-def find_handles(transcript):
-    """Finds teacher and student handles in the transcript. These are figured
-    out for each transcript because teachers can easily change their handles.
-    For example I went from Ms. Heyden to Mrs. Richardson"""
-    transcript = transcript.split('\n')
-    student_handle = None
-    teacher_handle = None
-    for line in transcript:
-        if line is not "":
-            if "Server" not in line:
-                a = re.search('((Mrs|Miss|Mr|Ms).*)@ \[', line)
-                if a is None:
-                    student_handle = line[:line.index('@')].strip()
-                else:
-                    teacher_handle = a.group(1).strip()
-        if teacher_handle is not None and student_handle is not None:
-            return teacher_handle, student_handle
-    return teacher_handle, student_handle
-
-
 def active_session(row):
     """Finds the number of times a student spoke followed immedieatly
     by a teacher. This is called an interaction"""
@@ -45,7 +9,7 @@ def active_session(row):
     teacher_handle = row.teacher_handle
     student_handle = row.student_handle
     interaction_count = 0
-    if teacher_handle is not None and student_handle is not None:
+    if teacher_handle is not False and student_handle is not False:
         transcript = transcript.split('\n')
         for i in range(len(transcript)-1):
             if '@' in transcript[i] and '@' in transcript[i+1]:
@@ -56,6 +20,8 @@ def active_session(row):
     return interaction_count
 
 
+#Instead of applying talk_boolean to each transcript, do it in parts until the
+#num_transcripts has been satisfied.
 def filter(df, num_transcripts, desire_interaction):
     transcripts = pd.DataFrame()
     teacher_real_names = df.name
@@ -63,7 +29,6 @@ def filter(df, num_transcripts, desire_interaction):
     for teachername in unique_teacher_names:
         teacher_df = df[(df.name == teachername)]
         teacher_df = teacher_df.query('active_session==True')
-        teacher_df = teacher_df.query('talk_boolean==False')
         try:
             teacher_df = teacher_df.sample(n=num_transcripts)
         except ValueError:
@@ -78,10 +43,18 @@ def filter(df, num_transcripts, desire_interaction):
 def filtered_transcripts(df, num_transcripts, desired_num_interactions):
     df['transcript'].replace('', np.nan, inplace=True)
     df.dropna(subset=['transcript'], inplace=True)
-    df['teacher_handle'], df['student_handle'] = zip(*df['transcript'].map(find_handles))
+    find_teacher = r"(\n|^)(?P<FULL>(Mrs|Miss|Mr|Ms)(\s|\.).*(?=@))"
+    df['teacher_handle'] = df['transcript'].str.extract(find_teacher).FULL
+    df['teacher_handle'].fillna(False,inplace=True)
+    df.dropna(subset=['teacher_handle'], inplace=True)
+    find_student = r"((\n|^)(?P<FULL>(?!(Ms|Mrs|Miss|Mr|Ms|Server Notice)(\s|\.)).*(?=@)))"
+    df['student_handle'] = df['transcript'].str.extract(find_student).FULL
+    df.dropna(subset=['student_handle'], inplace=True)
+    find_talk =  r"(\n|^)((?!(Ms|Mrs|Miss|Mr|Ms|Server Notice)(\s|\.)).*((?P<FULL>(?=)(Talk|voice|speak|spek|talkk|taalk|tack))))"
+    df['type_boolean'] = df['transcript'].str.extract(find_talk).FULL
+    df['type_boolean'].fillna(True, inplace=True)
     df['number_of_interactions'] = df.apply(active_session, axis=1)
     df['active_session'] = df['number_of_interactions'].map(lambda x: x>=desired_num_interactions)
-    df['talk_boolean'] = df.apply(talk_boolean, axis=1)
-    df['wb_boolean'] = df['wb_message_count'].map(lambda x: x>3)
     df = filter(df, num_transcripts, desired_num_interactions)
+    df['wb_boolean'] = df['wb_message_count'].map(lambda x: x>3)
     return df

@@ -5,7 +5,7 @@ import os
 
 
 """Input Variables"""
-num_transcripts = 5
+num_transcripts = 50
 desired_num_interactions = 3
 os.system('attrib +H *.pyc /S') #Hides .pyc file in direcory
 df = pd.read_csv('data_source/RawPeriscope.csv')
