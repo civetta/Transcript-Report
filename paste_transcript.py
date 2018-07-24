@@ -6,7 +6,7 @@ from openpyxl.utils import get_column_letter
 
 def paste_transcript(ws, trans_df, wb_boolean, lesson_name):
     if ws.cell(row=1, column=1).value is None:
-        column=1
+        column = 1
     else:
         column = ws.max_column+1
     if wb_boolean > 3:
@@ -15,7 +15,7 @@ def paste_transcript(ws, trans_df, wb_boolean, lesson_name):
         transcript_title = lesson_name
     ws.cell(row=1, column=column, value=transcript_title).font=Font(bold=True)
     ws.column_dimensions[get_column_letter(column)].width = int(70)
-    for_line_in_transcript(trans_df, ws,column)
+    for_line_in_transcript(trans_df, ws, column)
 
 
 
