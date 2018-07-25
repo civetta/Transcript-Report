@@ -2,6 +2,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, colors, Alignment
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.utils import get_column_letter
+#from openpyxl.worksheet.write_only import WriteOnlyCell
 
 
 def paste_transcript(ws, trans_df, wb_boolean, lesson_name):
