@@ -15,9 +15,9 @@ def create_transcript_df(row, teacher_df, teachername, wb, ws, rt_ws):
     wb_count = row['wb_message_count']
     transcript = row['transcript'].split('\n')
     trans_df = create_trandsdf(transcript, teach_handle, stud_handle)
-    trans_df = create_marked_lines(trans_df)
-    paste_transcript(ws, trans_df, wb_count, lesson_name)
-    wb.save('teacher_sheets/'+teachername+'.xlsx')
+    #trans_df = create_marked_lines(trans_df)
+    #paste_transcript(ws, trans_df, wb_count, lesson_name)
+    #wb.save('teacher_sheets/'+teachername+'.xlsx')
 
 
 def create_trandsdf(transcript, teach_handle, stud_handle):
@@ -57,7 +57,6 @@ def fill_in_transdf(trans_df, line, teach_handle, stud_handle):
     """Uses Logic to fill in the transcript dataframe"""
     time_stamp = create_timestamp(line)
     handle = create_handle(line)
-
     trans_df['Handle'].append(handle)
     trans_df['Transcript'].append(line)
     trans_df['Time_Stamps'].append(time_stamp)

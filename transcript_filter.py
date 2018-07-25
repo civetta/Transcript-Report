@@ -3,21 +3,19 @@ import re
 import pandas as pd
 
 def active_session(row):
+
+
     """Finds the number of times a student spoke followed immedieatly
     by a teacher. This is called an interaction"""
     transcript = row.transcript
-    teacher_handle = row.teacher_handle
-    student_handle = row.student_handle
-    interaction_count = 0
-    if teacher_handle is not False and student_handle is not False:
-        transcript = transcript.split('\n')
-        for i in range(len(transcript)-1):
-            if '@' in transcript[i] and '@' in transcript[i+1]:
-                first = transcript[i][:transcript[i].index('@')+3]
-                second = transcript[i+1][:transcript[i+1].index('@')+3]
-                if student_handle in first and teacher_handle in second:
-                    interaction_count = interaction_count+1
-    return interaction_count
+    student = row.student_handle
+    teacher = row.teacher_handle
+    if "." in teacher:
+        teacher = teacher.replace(".","\.")
+    regex = student+"@.*\n"+teacher +"@"
+
+    matches = re.findall(regex, transcript)
+    return len(matches)
 
 
 #Instead of applying talk_boolean to each transcript, do it in parts until the
@@ -40,19 +38,30 @@ def filter(df, num_transcripts, desire_interaction):
     return transcripts
 
 
-def filtered_transcripts(df, num_transcripts, desired_num_interactions):
-    df['transcript'].replace('', np.nan, inplace=True)
-    df.dropna(subset=['transcript'], inplace=True)
+def find_handles(df):
     find_teacher = r"(\n|^)(?P<FULL>(Mrs|Miss|Mr|Ms)(\s|\.).*(?=@))"
     df['teacher_handle'] = df['transcript'].str.extract(find_teacher).FULL
     df['teacher_handle'].fillna(False,inplace=True)
     df.dropna(subset=['teacher_handle'], inplace=True)
-    find_student = r"((\n|^)(?P<FULL>(?!(Ms|Mrs|Miss|Mr|Ms|Server Notice)(\s|\.)).*(?=@)))"
+    find_student = r"((\n|^)(?P<FULL>(?!(Ms|Mrs|Miss|Mr|Ms|Server Notice)(\s|\.))[^@]*))"
     df['student_handle'] = df['transcript'].str.extract(find_student).FULL
     df.dropna(subset=['student_handle'], inplace=True)
+    return df
+
+
+def find_type_bool(df):
     find_talk =  r"(\n|^)((?!(Ms|Mrs|Miss|Mr|Ms|Server Notice)(\s|\.)).*((?P<FULL>(?=)(Talk|voice|speak|spek|talkk|taalk|tack))))"
     df['type_boolean'] = df['transcript'].str.extract(find_talk).FULL
     df['type_boolean'].fillna(True, inplace=True)
+    return df
+
+
+def filtered_transcripts(df, num_transcripts, desired_num_interactions):
+    df['transcript'].replace('', np.nan, inplace=True)
+    df.dropna(subset=['transcript'], inplace=True)
+    df = find_handles(df)
+    df = find_type_bool(df)
+    df['handle_list']=df[['student_handle','teacher_handle']].values.tolist()
     df['number_of_interactions'] = df.apply(active_session, axis=1)
     df['active_session'] = df['number_of_interactions'].map(lambda x: x >= desired_num_interactions)
     df = filter(df, num_transcripts, desired_num_interactions)
