@@ -10,7 +10,7 @@ def create_marked_lines(trans_df):
     trans_df['approp'] = trans_df.Transcript.str.findall(approp)
     trans_df['vocab_count'] = trans_df.vocab.map(lambda x: len(x))
     trans_df['approp_count'] = trans_df.approp.map(lambda x:len(x))
-    trans_df['marked_line'] = trans_df.apply(create_marked_line, axis=1)
+    trans_df['marked_lines'] = trans_df.apply(create_marked_line, axis=1)
     return trans_df
 
 def create_marked_line(row):

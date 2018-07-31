@@ -1,34 +1,24 @@
-from openpyxl import Workbook
 import pandas as pd
 import re
 from marked_lines import create_marked_lines
-from paste_transcript import paste_transcript
-from datetime import datetime, timedelta, time
+from datetime import datetime
 
 
-def create_transcript_df(row, df, teachername, wb, ws, rt_ws):
-    teach_handle = row['teacher_handle'].strip()
-    stud_handle = row['student_handle'].strip()
-    lesson_name = row['lesson_name'].strip()
-    wb_count = row['wb_message_count']
-    
+def create_transcript_df(row, teach_handle, stud_handle, transcript):
     def handle_bool(x):
         if x == stud_handle:
             return True
         if x == teach_handle:
             return False 
-
-    transcript = row['transcript'].split('\n')
-    trans_df = pd.DataFrame({'Transcript': transcript})        
+    trans_df = pd.DataFrame({'Transcript': transcript.split('\n')})        
     trans_df['Handle'] = trans_df['Transcript'].map(lambda x: x[:x.index('@')].strip())
     trans_df['Student_Bool'] = trans_df.Handle.map(handle_bool)
     trans_df['Time_Stamps'] = trans_df.Transcript.map(create_timestamp)
     trans_df['Line_Char_Length'] = trans_df.Transcript.map(lambda x: len(x))
-    trans_df['rt'] = trans_df.Time_Stamps.diff().dt.total_seconds().fillna(0)
-    #trans_df = teacher_response(trans_df)
-    #trans_df = create_marked_lines(trans_df)
-    #paste_transcript(ws, trans_df, wb_count, lesson_name)
-    #wb.save('teacher_sheets/'+teachername+'.xlsx')"""
+    trans_df['rt'] = trans_df.Time_Stamps.diff().fillna(0)
+    trans_df = teacher_response(trans_df)
+    trans_df = create_marked_lines(trans_df)
+    return trans_df
 
 
 def create_timestamp(line):
@@ -51,6 +41,6 @@ def teacher_response(trans_df):
             rt_times.append(timestamps[idx] - timestamps[student_idx])
             student_idx = None
         else:
-            rt_times.append(None)
-    {'Teacher_Response': rt_times}        
+            rt_times.append(None) 
+    trans_df["Teacher_Response"] = rt_times
     return trans_df
