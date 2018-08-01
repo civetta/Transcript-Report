@@ -23,7 +23,7 @@ def clean_up(csv_list,transcript_Number):
     for row in csv_list:
         i=row[2]
         line=i.splitlines()
-        if len(i)>600 and i.count('talk')<=1 and len(re.findall(talk_string,i,re.IGNORECASE))<=1 and len(re.findall("Ms.|Mrs.|Mr.|Miss ",i)) >=2:
+        if len(i)>200 and i.count('talk')<=1 and len(re.findall(talk_string,i,re.IGNORECASE))<=1 and len(re.findall("Ms.|Mrs.|Mr.|Miss ",i)) >=2:
             """Checks to make sure there is an @ in each line and there are no empty strings"""
     
             if len(line)!=len(re.findall('@',i)):

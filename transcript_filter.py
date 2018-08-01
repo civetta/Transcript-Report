@@ -3,8 +3,6 @@ import re
 import pandas as pd
 
 def active_session(row):
-
-
     """Finds the number of times a student spoke followed immedieatly
     by a teacher. This is called an interaction"""
     transcript = row.transcript
@@ -13,20 +11,18 @@ def active_session(row):
     if "." in teacher:
         teacher = teacher.replace(".","\.")
     regex = student+"@.*\n"+teacher +"@"
-
     matches = re.findall(regex, transcript)
     return len(matches)
 
 
-#Instead of applying talk_boolean to each transcript, do it in parts until the
-#num_transcripts has been satisfied.
 def filter(df, num_transcripts, desire_interaction):
     transcripts = pd.DataFrame()
     teacher_real_names = df.name
     unique_teacher_names = list(set(teacher_real_names))
     for teachername in unique_teacher_names:
         teacher_df = df[(df.name == teachername)]
-        teacher_df = teacher_df.query('active_session==True')
+        #Quickest way to remove all False active_sessions. DF work well with booleans
+        teacher_df = teacher_df[teacher_df.active_session]
         try:
             teacher_df = teacher_df.sample(n=num_transcripts)
         except ValueError:
@@ -58,10 +54,10 @@ def find_type_bool(df):
 
 def filtered_transcripts(df, num_transcripts, desired_num_interactions):
     df['transcript'].replace('', np.nan, inplace=True)
+    
     df.dropna(subset=['transcript'], inplace=True)
     df = find_handles(df)
     df = find_type_bool(df)
-    df['handle_list']=df[['student_handle','teacher_handle']].values.tolist()
     df['number_of_interactions'] = df.apply(active_session, axis=1)
     df['active_session'] = df['number_of_interactions'].map(lambda x: x >= desired_num_interactions)
     df = filter(df, num_transcripts, desired_num_interactions)

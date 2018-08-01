@@ -10,6 +10,7 @@ def create_transcript_df(row, teach_handle, stud_handle, transcript):
             return True
         if x == teach_handle:
             return False 
+    transcript = transcript[transcript.index(teach_handle):]
     trans_df = pd.DataFrame({'Transcript': transcript.split('\n')})        
     trans_df['Handle'] = trans_df['Transcript'].map(lambda x: x[:x.index('@')].strip())
     trans_df['Student_Bool'] = trans_df.Handle.map(handle_bool)

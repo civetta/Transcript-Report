@@ -18,8 +18,8 @@ transcript_number = raw_input('Number of Transcripts Per Teacher Youd Like to Re
 transcript_number = int(transcript_number)
 team_lead_name = raw_input('Team Lead Name: ')
 team_lead_name = str(team_lead_name)"""
-file_name="Jeremy1"
-transcript_number=4
+file_name="CristenP"
+transcript_number=20
 team_lead_name="Angela"
 #"Jeremy Shock","Rachel Adams","Jairo  Rios","Jill Szafranski","Kristin Donnelly","Caren Glowa",''
 import datetime
