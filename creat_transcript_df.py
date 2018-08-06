@@ -2,6 +2,7 @@ import pandas as pd
 import re
 from marked_lines import create_marked_lines
 from datetime import datetime
+import numpy as np
 
 
 def create_transcript_df(row, teach_handle, stud_handle, transcript):
@@ -18,6 +19,8 @@ def create_transcript_df(row, teach_handle, stud_handle, transcript):
     trans_df['Line_Char_Length'] = trans_df.Transcript.map(lambda x: len(x))
     trans_df['rt'] = trans_df.Time_Stamps.diff().fillna(0)
     trans_df = teacher_response(trans_df)
+    trans_df['rt_paste'] = trans_df["Teacher_Response"].map(lambda x: str(x)+'-TR' if pd.isnull(x) is False else x)
+    trans_df['rt_paste'] = trans_df.rt_paste.combine_first(trans_df.rt)
     trans_df = create_marked_lines(trans_df)
     return trans_df
 
