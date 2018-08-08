@@ -2,6 +2,7 @@ import pandas as pd
 import re
 import numpy as np
 
+
 def create_marked_lines(trans_df):
     """Creates the new columns for each transcript"""
     vocab =(r"(?:^|\W|\n|\s|)(?P<VOCAB>Absolute Value|Acute Angle|Addend|Addition|Additive Inverses|adjacent|Algorithm|Alternate Exterior Angles|Alternate Interior Angles|Angle|Approximately|Arc|Area|Area Model Of Multiplication|Arithmetic Sequence|Array|Associative Property|Associative Property Of Addition|Associative Property Of Multiplication|Asymptote|Average|Average Rate Of Change|Bar Chart|Bar Graph|Base|Base Ten|Base-10|Benchmark|Benchmark Fractions|Biconditional Statement|Binomial|Bisect|Box-And-Whisker Plot|Calculate|Central Angle|Chord|Circumference|Circumscribed Angle|Circumscribed Figure|Classify|Coefficient|Column|Combine|common denominator|Common Factor|Common Multiple|Common Ratio|Commutative Property|Complementary Angles|Completing The Square|composite figure|Composite Number|compound interest|compound probability|Concave|Conditional Statement|Cone|congruent|Congruent Figures|Conjecture|Constant Term|Contrapositive|Converse|Coordinate Pair|Coordinate Plane|Correlation|Corresponding Angles|Corresponding Sides|Cosine Ratio|Cross Section|Cube|Customary Measurement System|Cylinder|Data|Decimal|Decimal Approximation|Decimal Grid|Decrease|Degree|Delta|Denominator|Density|Diagonal|Diagram|Diameter|Difference|Digit|Dilation|Dimensions|direct variation|Directly Proportional|Distance|Distributive Property|Dividend|Division|Divisor|Domain|Dot Plot|Double|Edge|Elapsed Time|Endpoint|Equally Likely Events|Equation|Equiangular|Equidistant|Equilateral Triangle|equivalent|Equivalent Expressions|Equivalent Fractions|Equivalent Ratios|Estimate|estimation|Evaluate|Excluded Values|Expanded Exponential Form|Expanded Form|Experimental Probability|Exponent|Exponent|Exponential Decay|Exponential Growth|Expression|Exterior Angle|Fact Family|Factor|factor pair|Favorable Outcome|Figure|First Quartile|Five-Number Summary|Formula|Fraction|Frequency|Function|Gallon|Geometric Sequence|Graph|Greater Than|Greatest Common Factor|Group|Growth Factor|Half-Plane|Halves|Hand-Span|Height|Histogram|Horizontal|Hypotenuse|Identity Property Of Addition|Identity Property Of Multiplication|Imaginary Number|Improper Fraction|Increase|Inequality|Inscribed Angle|Inscribed Figure|Integers|Integers|Interest|Interior Angle|Interquartile Range|Intersection|Interval|inverse|Inverse Of A Conditional Statement|Inverse Operations|Inverse Relationship|Inversely Proportional|Irrational Number|Isosceles Triangle|Lateral Surface Area|Law Of Large Numbers|Least Common Denominator|Least Common Multiple|Legs|Length|Less Than|Like Terms|Line|Line Of Best Fit|Line Of Symmetry|Line Plot|Line Segment|Linear Pair|Linear Relationship|Location|Logarithm|Long Division|Lower Quartile|Mass|Mathematical Model|mean absolute deviation|Measure|Median|Meter|Metric System|Mixed Number|Mode|Model|Multiple|Multiplication|Multiplicative Identity|Multiplicative Inverses|Negative Number|Net|Normal Distribution|Number Line|Number System|Numerator|Obtuse Angle|odd|Operation|Opposites|Order Of Operations|Origin|Outcome|Parabola|Parallel Lines|Parallelogram|Parentheses|Pattern|Percent|Perfect Square|Perimeter|Perpendicular|Pi|Place Value|Plane|point-slope form|Polygon|Polygon|Polynomial|Positive Number|Powers Of Ten|Prime Factorization|Prime Number|Principal|Prism|Probability|Product|profit|Proof|Proportion|proportional relationship|Pyramid|Pythagorean Theorem|Quadrants|Quadratic|Quadratic Formula|Quadrilateral|quartile|Quotient|Radian|Radical Expression|Radius|Range|Range Of A Function|Rate|Ratio|Rational Number|Ray|Reasonable|Reciprocal|Rectangle|Rectangular Prism|recursive formula|Reflection|Reflection Symmetry|Reflexive Property Of Equality|regroup|Regrouped|Regrouping|Regular Polygon|related facts|Remainder|Repeating Decimal|Represent|Rhombus|Right Angle|Right Prism|Right Triangle|Rigid Transformation|Rise|Roots Of A Function|Rotation|Rotational Symmetry|Round|Row|Same Side Exterior Angles|Same Side Interior Angles|Sample Space|Scale|Scale Factor|Scalene Triangle|Scatter Plot|Section|Sector|Sequence|Shaded|Shape|Side Of A Polygon|Similar|Similar Figures|simple interest|Simplest Form|Sine Ratio|Situation|Slope|Slope-Intercept Form Of An Equation|Sphere|Spread|Square|Square Number|Square Root|Square Unit|Standard Deviation|standard form|Stem-And-Leaf Plot|Straight Angle|Substitution|Subtend|Subtraction|Sum|Supplementary Angles|Surface Area|Symmetry|System Of Linear Equations|Table|Tally Marks|Tangent Line|Tangent Ratio|Term|Terminating Decimal|Theoretical Probability|Third Quartile|Transformation|Transformation Rule|Transitive Property Of Equality|Translation|Transversal|Trapezoid|Tree Diagram|Trial|Trigonometric Ratio|Trinomial|Unequal|Unit|Unit Cube|Unit Fraction|Unit Rate|Upper Quartile|value|Variable|Vertex|Vertical|Vertical Angle|Volume|Weight|Whole|Whole Numbers|word form|X-Axis|X-Intercept|Y-Axis|Y-Intercept|Zero Property|Zeros Of A Function|Add|Subtract|Multiply|Divide|Convex|Overestimate|Equal|Equally|Total|Face)(?:$|\s|s|\n|\W)")
@@ -11,14 +12,27 @@ def create_marked_lines(trans_df):
     trans_df['vocab_count'] = trans_df.vocab.map(lambda x: len(x))
     trans_df['approp_count'] = trans_df.approp.map(lambda x:len(x))
     trans_df['marked_lines'] = trans_df.apply(create_marked_line, axis=1)
+    trans_df = grey_out(trans_df)
     return trans_df
+
 
 def create_marked_line(row):
     """Marks the line up for conditional formatting later when pasted into excel"""
     line = row.Transcript
     if row.vocab_count > 0 and row.Student_Bool is False:
-        line = line + " -- " + str(row.vocab_count)[1:-1] +'-- VOCAB FOUND'
+        line = line + " -- " + str(row.vocab)[1:-1] +'-- VOCAB FOUND'
     if row.approp_count > 0 and row.Student_Bool is False:
         line = line + "--APPROP FOUND"
+    if "draw" in line or "[Image]" in line or 'whiteboard' in line:
+        line = line + "--MARK GREEN"
     return line
 
+
+def grey_out(trans_df):
+    student_bool = trans_df.Student_Bool
+    for idx in range(len(student_bool)):
+        if sum(student_bool[idx:idx+3]) == 0 and len(student_bool[idx:idx+3]) > 2:
+            for idx_item in range(idx, idx+3):
+                edited_line = trans_df.marked_lines[idx_item] +'--GREY OUT'
+                trans_df.at[idx_item, 'marked_lines'] = edited_line
+    return trans_df

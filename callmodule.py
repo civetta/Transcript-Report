@@ -5,7 +5,8 @@ from transcript_filter import filtered_transcripts
 from creat_transcript_df import create_transcript_df
 from paste_transcript import paste_transcript
 from paste_transcript import paste_response
-from paste_transcript import paste_kpi
+from paste_kpi import paste_kpi
+from dash_data import get_data
 import os
 
 
@@ -25,18 +26,17 @@ def find_transcript_data(row):
 
 
 
-
-
-
 """Input Variables"""
-num_transcripts = 5
+num_transcripts = 50
 desired_num_interactions = 3
 os.system('attrib +H *.pyc /S') #Hides .pyc file in directory
-df = pd.read_csv('data_source/RawPeriscope.csv')
+df = pd.read_csv('data_source/caren.csv')
 date = pd.read_csv('data_source/date2.csv')
 
 
 """Calling Functions"""
+ytd = get_data()
+ytd = pd.DataFrame(ytd['ytdTeacher'])
 df = filtered_transcripts(df, num_transcripts, desired_num_interactions)
 """Creating a DF for each teacher and then going through each row to create
 an individual Transcript DF."""
@@ -53,14 +53,16 @@ unique_teacher_names = list(set(teacher_real_names))
 team_rt = np.asarray([item for sublist in df.art.values for item in sublist])
 team_frt = np.asarray(df.frt.values.astype('timedelta64[s]'))
 for teachername in unique_teacher_names:
+    row_in_ytd = ytd.loc[ytd['teacherName'] == teachername]
     teacherbook = Workbook()
     ws = teacherbook.create_sheet('Transcripts')
     rt_ws = teacherbook.create_sheet('ART-FRT')
+    teacherbook.remove_sheet(teacherbook.get_sheet_by_name('Sheet'))
     teacher_df = df[(df.name == teachername)]
     teacher_rt = np.asarray([item for sublist in teacher_df.art.values for item in sublist])
     teacher_frt = np.asarray(teacher_df.frt.values.astype('timedelta64[s]'))
 
-    paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws)
+    paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws, row_in_ytd)
     teacher_df.apply(paste_transcript, args=(ws, ), axis=1)
     teacher_df.apply(paste_response, args=(rt_ws, ), axis=1)
     
