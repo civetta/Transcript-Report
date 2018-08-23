@@ -3,10 +3,15 @@ from openpyxl.utils import get_column_letter
 import pandas as pd
 import numpy as np
 from openpyxl.chart import BarChart, Series, Reference
-
+"""Pastes the summary data in the KPI worksheet in the teacherbook. It includes
+the team FRT, teacher FRT, teacher ART, and Team ART. Then it generates charts
+for easy comparison"""
 
 
 def paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws, row_in_ytd):
+    """Creates a KPI dictionary with teacher stats,
+     makes it into a dataframe, and then pastes the df into excel. Then it 
+     calls ytd from the Admin Dashboard website"""
     kpi_dict = {'Statistics':['Median',"Max","Min","Average"],
     'Teacher FRT':[np.median(teacher_frt), teacher_frt.max(),teacher_frt.min(), teacher_frt.mean()],
     'Team FRT':[np.median(team_frt),team_frt.max(),team_frt.min(), team_frt.mean()],
@@ -31,6 +36,8 @@ def paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws, row_in_ytd):
     rt_ws.cell(row=7, column=2, value=round(float((row_in_ytd['averageSessionTime'])/60), 2))
 
 def create_box_chart(rt_ws):
+    """Uses openpyxl built in library to creates box charts of
+     the data for easy reading"""
     chart1 = BarChart()
     chart1.type = "col"
     chart1.style = 10

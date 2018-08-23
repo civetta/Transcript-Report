@@ -1,3 +1,12 @@
+"""Takes each transcripts and makes a dataframe out of each of them called
+ trans_df (transcript dataframe). With this it figures out the RT (response time)
+ It also figures out the response time between each line,
+teacher response time to a student specifically, and 
+ creates an rt_paste which is a hybrid of those together and is pasted in the 
+ transcript-report so teachers can see Their Response times to a student as 
+ well as other response times. """
+
+
 import pandas as pd
 import re
 from marked_lines import create_marked_lines
@@ -6,11 +15,17 @@ import numpy as np
 
 
 def create_transcript_df(row, teach_handle, stud_handle, transcript):
+    """Creates several new columns for each transcript. They are then zipped up
+    and sent back up and used for overall transcript analysis. For example 
+    using the Student_Bool (true or false student) and the Line_Char_Length
+    column, we can figure out the average character length a student 
+    sends vs average character length a teacher sends"""
     def handle_bool(x):
         if x == stud_handle:
             return True
         if x == teach_handle:
             return False 
+
     transcript = transcript[transcript.index(teach_handle):]
     trans_df = pd.DataFrame({'Transcript': transcript.split('\n')})        
     trans_df['Handle'] = trans_df['Transcript'].map(lambda x: x[:x.index('@')].strip())
@@ -26,6 +41,7 @@ def create_transcript_df(row, teach_handle, stud_handle, transcript):
 
 
 def create_timestamp(line):
+    """Makes timestamps easier to read"""
     time = line[:line.index('Z]:')+1]
     match = re.match(r"(.*)\[(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})", time)
     time_stamp = match.group(2)+" "+match.group(3)
@@ -34,6 +50,9 @@ def create_timestamp(line):
 
 
 def teacher_response(trans_df):
+    """Figures out the teachers respones time to a student. Teacher response
+    time is defined as the length of time it takes for a teacher to response
+    to the students first message."""
     rt_times = []
     student_bool = trans_df['Student_Bool']
     timestamps = trans_df['Time_Stamps']

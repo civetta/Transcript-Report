@@ -4,8 +4,13 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.utils import get_column_letter
 import pandas as pd
 
+"""Patest the marked_lines column into each column in an excel sheet"""
+
 
 def paste_response(row, rt_ws):
+    """Finds the correct column to paste response time data into. Then 
+    it drills down to the trans_df from the transcript df, which was zipped up
+    earlier."""
     student_handle = row.student_handle
     trans_df = row.transcript_info
     trans_df = pd.DataFrame(trans_df)
@@ -22,6 +27,9 @@ def paste_response(row, rt_ws):
 
 
 def for_line_in_rt_ws(rt_ws, trans_df, column, student_handle):
+    """Pastes data into the correct column. It then makes the first time a 
+    student talks green, and a teachers first response to that green time, 
+    in blue. After that all teacher responses are bolded"""
     FRT = 'Not Found'
     Student_First_Response = "Not Found"
 
@@ -54,6 +62,13 @@ def for_line_in_rt_ws(rt_ws, trans_df, column, student_handle):
         
 
 def paste_transcript(row, ws):
+    """Takes the transcript row, and drills back down to trans_df and makes 
+    it it's own df again. Then it finds the correct column to paste the 
+    transcript in. It then creates the title of the transcript which is 
+    the lesson name, and if the whiteboard boolean is true it pastes a 
+    --Whiteboard Used at the end of the lesson name. This is placed in the
+    first row in the column. It then passes the trans_df into for_line_in
+    _transcript function"""
     wb_boolean = row.wb_boolean
     lesson_name = row.lesson_name
     trans_df = row.transcript_info
@@ -72,6 +87,10 @@ def paste_transcript(row, ws):
 
 
 def for_line_in_transcript(trans_df, ws, column):
+    """Pastes each line of the transcript into it's own row. Then depending on
+    if the indicators or there, does some kind of markup. For example if
+     --VOCAB FOUND is in the line, then it makes that paticular cell's 
+     font blue and bold."""
     for row, line in enumerate(trans_df.marked_lines, 0):
         active_cell = ws.cell(row=row+2, column=column)
         if '-- VOCAB FOUND' in line:
