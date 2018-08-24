@@ -21,6 +21,8 @@ teachers in their personal Transcript Reports. This was a desicion by management
 **CallModule**
 
 
+
+
 **Transcript Filter:** Takes the initial csv file from periscope and finds several things about it.
 The teacher and student handle for that transcript. The number of interactions.
 If it was a "type session" or not (typing as in the teacher typed instead of 
@@ -38,6 +40,16 @@ teacher response time to a student specifically, and
  creates an rt_paste which is a hybrid of those together and is pasted in the 
  transcript-report so teachers can see Their Response times to a student as 
  well as other response times. 
+
+
+**Create Teacher Df:** Creates a DF for each teachers transcripts. Then goes
+through each transcript in teacher_df and makes another df for each transcript (called trans_df, see Create Transcript DF).
+Once create_transcript_df has gone through and analyzed each individual transcript, it zips all of the information back 
+up and adds new columns to the teacher_df, with the new data being information about the transcript in that row. 
+Then using that information it makes further data. For example using the response time data figured out by
+transcript_df, a new column will be added to teacher_df with the median response time of the transcripts in 
+the same row. 
+
 
 **Marked Lines:**
 Marked Lines module takes the transcript df as an input. Each row is a line 

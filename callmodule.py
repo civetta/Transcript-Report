@@ -10,9 +10,11 @@ def call_func(num_transcripts, df, desired_num_interactions):
     ytd = get_data()
     ytd = pd.DataFrame(ytd['ytdTeacher'])
     df = filtered_transcripts(df, num_transcripts, desired_num_interactions)
+    df.to_csv('After_Filter.csv')
     """Creating a DF for each teacher and then going through each row to create
     an individual Transcript DF."""
     df['transcript_info'], df['frt'], df['art'], df['vocab'], df['session_length_secs'], df['avg_teacher_response_length'], df['avg_student_response_length'] = zip(*df.apply(find_transcript_data, axis=1))
+    df.to_csv('After_Transcript_df.csv')
     teacher_real_names = df.name
     unique_teacher_names = list(set(teacher_real_names))
     #Creates a nparray of all of the teachers response times.
