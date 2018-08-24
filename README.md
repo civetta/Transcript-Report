@@ -18,10 +18,7 @@ teachers in their personal Transcript Reports. This was a desicion by management
 
 # Modules Descriptions
 
-**CallModule**
-
-
-
+**CallModule:** Calls the below modules. The call module hosts the input variables.
 
 **Transcript Filter:** Takes the initial csv file from periscope and finds several things about it.
 The teacher and student handle for that transcript. The number of interactions.
@@ -39,17 +36,8 @@ teacher opened it up, and drew something).
 teacher response time to a student specifically, and 
  creates an rt_paste which is a hybrid of those together and is pasted in the 
  transcript-report so teachers can see Their Response times to a student as 
- well as other response times. 
-
-
-**Create Teacher Df:** Creates a DF for each teachers transcripts. Then goes
-through each transcript in teacher_df and makes another df for each transcript (called trans_df, see Create Transcript DF).
-Once create_transcript_df has gone through and analyzed each individual transcript, it zips all of the information back 
-up and adds new columns to the teacher_df, with the new data being information about the transcript in that row. 
-Then using that information it makes further data. For example using the response time data figured out by
-transcript_df, a new column will be added to teacher_df with the median response time of the transcripts in 
-the same row. 
-
+ well as other response times. It then zips up this information and sends it back
+ up to the original df.
 
 **Marked Lines:**
 Marked Lines module takes the transcript df as an input. Each row is a line 
@@ -59,6 +47,12 @@ are used, and if a teacher talks more than 3 times in row. Then the column
 a teacher used vocab, then --VOCAB is added at the end so that when pasting it
 into Openpyxl, the script knows to make that line blue.
 
+
+**Create Teacher Df:** Creates a DF for each teachers transcripts. Then it creates a formated workbook for each teacher. 
+It then looks at the zipped up information fond from the transcript_df, and figures out things like Average Response time,
+Average First Response time, and so on. It then calls on all of the paste modules to paste this information into the excel
+workbook.The workbook is then saved, and thus the individual teacher excel workbook is created.
+
 **Paste Transcript:**
 Pastes transcript information into Transcript worksheet in teacherbook. It 
 pastes one line of the transcript into each row. Then looking for the marked lines markers (such as --VOCAB), it formats the cell. For example if there is a
@@ -67,3 +61,5 @@ pastes one line of the transcript into each row. Then looking for the marked lin
 **Paste KPI:** Pastes the summary data in the KPI worksheet in the teacherbook. It includes
 the team FRT, teacher FRT, teacher ART, and Team ART. Then it generates charts
 for easy comparison.
+
+**Paste Response** Pastes response data into the KPI Worksheet. Pastes timestamps, followed by response times. Cells are conditionally formatted according to markers.

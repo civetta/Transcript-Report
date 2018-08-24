@@ -1,3 +1,9 @@
+import pandas as pd
+import re
+from marked_lines import create_marked_lines
+from datetime import datetime
+import numpy as np
+
 """Takes each transcripts and makes a dataframe out of each of them called
  trans_df (transcript dataframe). With this it figures out the RT (response time)
  It also figures out the response time between each line,
@@ -6,12 +12,6 @@ teacher response time to a student specifically, and
  transcript-report so teachers can see Their Response times to a student as 
  well as other response times. """
 
-
-import pandas as pd
-import re
-from marked_lines import create_marked_lines
-from datetime import datetime
-import numpy as np
 
 
 def create_transcript_df(row, teach_handle, stud_handle, transcript):
@@ -62,7 +62,8 @@ def teacher_response(trans_df):
         if user_type is True and student_idx is None:
             student_idx = idx
         if user_type is False and student_idx is not None:
-            rt_times.append(timestamps[idx] - timestamps[student_idx])
+            delta = (timestamps[idx] - timestamps[student_idx]).total_seconds()
+            rt_times.append(delta)
             student_idx = None
         else:
             rt_times.append(None) 

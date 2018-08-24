@@ -1,13 +1,17 @@
 import pandas as pd
 from openpyxl import Workbook
 import numpy as np
-from creat_transcript_df import create_transcript_df
 from paste_transcript import paste_transcript
 from paste_transcript import paste_response
 from paste_kpi import paste_kpi
+from datetime import datetime
 
 
-def teacher_df(unique_teacher_names, ytd, df, team_rt, team_frt):
+
+
+def teacher_df(unique_teacher_names, ytd, df, team_rt, team_frt, summary):
+    """Creates a df for each teacher and sends it over to all of the paste
+    functions to paste into excel"""
     for teachername in unique_teacher_names:
         row_in_ytd = ytd.loc[ytd['teacherName'] == teachername]
         teacherbook, ws, rt_ws = create_teacherbook()
@@ -22,11 +26,14 @@ def teacher_df(unique_teacher_names, ytd, df, team_rt, team_frt):
         paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws, row_in_ytd)
         teacher_df.apply(paste_transcript, args=(ws, ), axis=1)
         teacher_df.apply(paste_response, args=(rt_ws, ), axis=1)        
+        #Saves the workbook as an excel doc, under teacher_sheets, using teachername in the title.
+        summary = update_summary_data(teacher_df, teacher_rt, teacher_frt, summary, teachername)
         teacherbook.save('teacher_sheets/'+teachername+'.xlsx')
+    return summary
 
 
 def create_teacherbook():
-    #Sets up teacherbooks, creates worksheets, deletes default sheet
+    """Sets up teacherbooks, creates worksheets, deletes default sheet"""
     teacherbook = Workbook()
     ws = teacherbook.create_sheet('Transcripts')
     rt_ws = teacherbook.create_sheet('ART-FRT')
@@ -34,21 +41,21 @@ def create_teacherbook():
     return teacherbook, ws, rt_ws
 
 
-def find_transcript_data(row):
-    #Calls create_transcript_df which creates a df for each transcript.
-    trans_df = create_transcript_df(
-        row, row['teacher_handle'].strip(), 
-        row['student_handle'].strip(), row['transcript'].strip())
-    #Finds the first response time and defines it as the First Response Time (FRT)
-    frt_loc = trans_df.Teacher_Response.first_valid_index()
-    frt = trans_df.Teacher_Response[frt_loc]
-    #RT is short for response time. Looks through lost, drops empty ones
-    rt = trans_df.dropna(subset=['Teacher_Response']).Teacher_Response.values.astype('timedelta64[s]')
-    #vocab = the total number of vocab words used in the transcript.
-    vocab = trans_df.vocab_count.sum()
-    session_length_secs = (trans_df.Time_Stamps.iloc[-1] - trans_df.Time_Stamps.iloc[0]).seconds
-    #Represents the average response length (as in character length)
-    student_response = trans_df[trans_df.Student_Bool].Line_Char_Length.mean()
-    teacher_response = trans_df[~trans_df.Student_Bool].Line_Char_Length.mean()
-    #returns all of the data found above, place in new columns under plain df.
-    return trans_df.to_dict(), frt, rt, vocab, session_length_secs, student_response, teacher_response
+def update_summary_data(teacher_df, teacher_rt, teacher_frt, summary, teachername):
+    """Updates the Summary df which will be saved as a csv file and given to management"""
+    teacher_summary = {
+    'Name': [teachername],
+    'Team': ['To Be Determined'],
+    'FRT Median': [np.median(teacher_frt)],
+    'ART Median': [np.median(teacher_rt)],
+    'Math Terms Per Session': [teacher_df.vocab_count.sum()],
+    'Appropriate Phrase Per Session' : [teacher_df.approp_count.mean()],
+    'Student Response Length': [np.median(teacher_df.avg_student_response_length)],
+    'Teacher Response Length': [np.median(teacher_df.avg_teacher_response_length)],
+    'Student to Teacher Exchange Ratio': [teacher_df.exchange_ratio.mean()],
+    'Average Session Length(minutes)': [round((teacher_df.session_length_secs.mean())/float(60),2)],
+    'Average Session Length(seconds)': [teacher_df.session_length_secs.mean()],
+    'Date': [datetime.today().strftime('%Y-%m-%d')]}
+    teacher_summary = pd.DataFrame(teacher_summary)
+    summary =  summary.append(teacher_summary, sort=False)
+    return summary
