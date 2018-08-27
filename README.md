@@ -20,6 +20,14 @@ teachers in their personal Transcript Reports. This was a desicion by management
 # Known Problems
 1) Regex efficiency under marked_lines is poor.
 
+# Requirements
+
+pandas==0.23.1
+openpyxl==2.4.6
+numpy==1.12.1
+
+
+
 # Modules Descriptions
 
 **CallModule:** Calls the below modules. The call module hosts the input variables.
@@ -33,6 +41,11 @@ Then it finds out if it was considered an "active whiteboard" session
 or not, using the whiteboard_count (these numbers represent the number of 
 times a teacher interacts with the whiteboard. So a number of at least 3 means a
 teacher opened it up, and drew something).
+
+**Transcript Analysis:** Calls transcript_df (see below). Then it takes
+the data from transcript df and analyzes it. For example it figure out
+
+
 
 **Create Transcript DF:** Takes each transcripts and makes a dataframe out of each of them called
  trans_df (transcript dataframe). With this it figures out the RT (response time)
@@ -50,6 +63,7 @@ are used, and if a teacher talks more than 3 times in row. Then the column
 "marked_lines" is updated, which indicators attached to it. For example if 
 a teacher used vocab, then --VOCAB is added at the end so that when pasting it
 into Openpyxl, the script knows to make that line blue.
+
 
 
 **Create Teacher Df:** Creates a DF for each teachers transcripts. Then it creates a formated workbook for each teacher. 
