@@ -2,7 +2,7 @@
 The purpose of this script is to generate Transcript Reports for teachers.
 Each teacher has their own transcript report containing only their transcripts,
 and personal Key Performance Indicators (KPI). Only transcripts that meet
-certain criteria are used. These criteria's can be edited under User Input Variables.
+certain criteria are used. These criteria's can be edited under User Input Variables. The transcript report was designed with management.
 
 
 The input for this script, is a CSV file pulled from the "Live Teaching Data" 
@@ -12,6 +12,10 @@ The output for this script is a Transcript Report Excel file for each teacher,
 and then a summary excel file containing summary KPI information. The summary
 excel file is only read by management and contains other data not given to 
 teachers in their personal Transcript Reports. This was a desicion by management.
+
+# Soapbox Explaining Transcript Reports to Teachers
+<div><p><a href="https://soapbox.wistia.com/videos/giRvCs8ori" target="_self"><img src="https://embed-ssl.wistia.com/deliveries/feeab2b777ee273ce22c8dbc102569e2a65db10b.jpg?image_play_button_size=2x&amp;image_crop_resized=960x540&amp;image_play_button=1&amp;image_play_button_color=54BBFFe0" style="height:225px;width:400px;" width="400" height="225"/></a></p><p><a href="https://soapbox.wistia.com/videos/giRvCs8ori">Soapbox - FRT/ART Explained</a></p></div>
+
 
 # Known Problems
 1) Regex efficiency under marked_lines is poor.
@@ -52,6 +56,8 @@ into Openpyxl, the script knows to make that line blue.
 It then looks at the zipped up information fond from the transcript_df, and figures out things like Average Response time,
 Average First Response time, and so on. It then calls on all of the paste modules to paste this information into the excel
 workbook.The workbook is then saved, and thus the individual teacher excel workbook is created.
+
+
 
 **Paste Transcript:**
 Pastes transcript information into Transcript worksheet in teacherbook. It 

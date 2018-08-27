@@ -7,28 +7,31 @@ from paste_kpi import paste_kpi
 from datetime import datetime
 
 
-
-
 def teacher_df(unique_teacher_names, ytd, df, team_rt, team_frt, summary):
     """Creates a df for each teacher and sends it over to all of the paste
     functions to paste into excel"""
     for teachername in unique_teacher_names:
+        
         row_in_ytd = ytd.loc[ytd['teacherName'] == teachername]
         teacherbook, ws, rt_ws = create_teacherbook()
+
         #Creates teacher_df, which is a df of just a single teacher transcripts.
         teacher_df = df[(df.name == teachername)]
         teacher_df = teacher_df.sort_values('lesson_name')
+
         #Creates a list of teacher response times.
         teacher_rt = np.asarray([item for sublist in teacher_df.art.values for item in sublist])
-        #Creates a list of teacher first response times.
         teacher_frt = np.asarray(teacher_df.frt.values.astype('timedelta64[s]'))
+
         #Pastes everything for each personal teacherbook.
         paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws, row_in_ytd)
         teacher_df.apply(paste_transcript, args=(ws, ), axis=1)
         teacher_df.apply(paste_response, args=(rt_ws, ), axis=1)        
+        
         #Saves the workbook as an excel doc, under teacher_sheets, using teachername in the title.
         summary = update_summary_data(teacher_df, teacher_rt, teacher_frt, summary, teachername)
         teacherbook.save('teacher_sheets/'+teachername+'.xlsx')
+    
     return summary
 
 
