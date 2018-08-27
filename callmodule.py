@@ -33,7 +33,7 @@ def call_func(num_transcripts, df, desired_num_interactions, summary):
 """Input Variables"""
 num_transcripts = 50
 desired_num_interactions = 3
-os.system('attrib +H *.pyc /S') #Hides .pyc file in directory
+#os.system('attrib +H *.pyc /S') #Hides .pyc file in directory
 df = pd.read_csv('data_source/caren.csv')
 summary = pd.DataFrame()
 
