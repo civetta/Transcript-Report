@@ -32,9 +32,10 @@ def call_func(num_transcripts, df, desired_num_interactions, summary):
 
 """Input Variables"""
 num_transcripts = 50
-desired_num_interactions = 0
+desired_num_interactions = 3
 #os.system('attrib +H *.pyc /S') #Hides .pyc file in directory
-df = pd.read_csv('data_source/ds_transcrpts.csv')
+df = pd.read_csv('data_source/jeremyteam.csv')
+df.rename(columns={'teacher name': 'name'}, inplace=True)
 summary = pd.DataFrame()
 
 call_func(num_transcripts, df, desired_num_interactions,summary)
