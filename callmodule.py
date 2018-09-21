@@ -1,5 +1,7 @@
 import pandas as pd
+from datetime import datetime
 from openpyxl import Workbook
+import os.path
 import numpy as np
 from transcript_filter import filtered_transcripts
 from dash_data import get_data
@@ -27,16 +29,28 @@ def call_func(num_transcripts, df, desired_num_interactions, summary, lead_name)
      'Teacher Response Length','Student to Teacher Exchange Ratio',
      'Average Session Length(minutes)',
      'Average Session Length(seconds)','Date']]
-    summary.to_csv('Management Summary.csv')
-    
+
+    mydate = datetime.now()
+    month = mydate.strftime("%b")
+    ms_filename = 'Management Summary-'+month+'.csv'
+    path = 'C:\Users\kelly.richardson\OneDrive - Imagine Learning Inc\Reports\Transcript Reports\Management Summaries'
+    ms_path = os.path.join(path,ms_filename)
+    if combine_management_summaries is False:
+        summary.to_csv(ms_path,index=False)
+    else:
+        ms = pd.read_csv(ms_path)
+        ms = ms.append(summary, sort=False, ignore_index=True)
+        ms.to_csv(ms_path,index=False)
 
 """Input Variables"""
+combine_management_summaries = False
 num_transcripts = 50
 desired_num_interactions = 3
 lead_name = "Jeremy"
 #os.system('attrib +H *.pyc /S') #Hides .pyc file in directory
-df = pd.read_csv('data_source/krist.csv')
+df = pd.read_csv('data_source/jeremy_sept.csv')
 df.rename(columns={'teacher name': 'name'}, inplace=True)
+
 summary = pd.DataFrame()
 
 call_func(num_transcripts, df, desired_num_interactions,summary,lead_name)
