@@ -1,4 +1,6 @@
 import pandas as pd
+import os.path
+import datetime
 from openpyxl import Workbook
 import numpy as np
 from paste_transcript import paste_transcript
@@ -7,7 +9,7 @@ from paste_kpi import paste_kpi
 from datetime import datetime
 
 
-def teacher_df(unique_teacher_names, ytd, df, team_rt, team_frt, summary):
+def teacher_df(unique_teacher_names, ytd, df, team_rt, team_frt, summary, lead_name):
     """Creates a df for each teacher and sends it over to all of the paste
     functions to paste into excel"""
     for teachername in unique_teacher_names:
@@ -29,8 +31,16 @@ def teacher_df(unique_teacher_names, ytd, df, team_rt, team_frt, summary):
         teacher_df.apply(paste_response, args=(rt_ws, ), axis=1)        
         
         #Saves the workbook as an excel doc, under teacher_sheets, using teachername in the title.
-        summary = update_summary_data(teacher_df, teacher_rt, teacher_frt, summary, teachername)
-        teacherbook.save('teacher_sheets/'+teachername+'.xlsx')
+        summary = update_summary_data(teacher_df, teacher_rt, teacher_frt, summary, teachername, lead_name)
+        
+        mydate = datetime.now()
+        month = mydate.strftime("%b")
+        path = 'C:\Users\kelly.richardson\OneDrive - Imagine Learning Inc\Reports\Transcript Reports'
+        file_name = teachername+"_"+month+'-Transcript Report.xlsx'
+        save_location = os.path.join(path,lead_name,teachername)
+        if not os.path.isdir(save_location):
+            os.makedirs (save_location)
+        teacherbook.save(save_location+"/"+file_name)
     
     return summary
 
@@ -44,11 +54,11 @@ def create_teacherbook():
     return teacherbook, ws, rt_ws
 
 
-def update_summary_data(teacher_df, teacher_rt, teacher_frt, summary, teachername):
+def update_summary_data(teacher_df, teacher_rt, teacher_frt, summary, teachername, lead_name):
     """Updates the Summary df which will be saved as a csv file and given to management"""
     teacher_summary = {
     'Name': [teachername],
-    'Team': ['To Be Determined'],
+    'Team': [lead_name],
     'FRT Median': [np.median(teacher_frt)],
     'ART Median': [np.median(teacher_rt)],
     'Math Terms Per Session': [teacher_df.vocab_count.sum()],

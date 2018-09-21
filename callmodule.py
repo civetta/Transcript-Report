@@ -8,7 +8,7 @@ from transcript_analysis import find_transcript_data
 import os
 
 
-def call_func(num_transcripts, df, desired_num_interactions, summary):
+def call_func(num_transcripts, df, desired_num_interactions, summary, lead_name):
     ytd = get_data()
     ytd = pd.DataFrame(ytd['ytdTeacher'])
     df = filtered_transcripts(df, num_transcripts, desired_num_interactions)
@@ -21,7 +21,7 @@ def call_func(num_transcripts, df, desired_num_interactions, summary):
     #Creates a nparray of all of the teachers response times.
     team_rt = np.asarray([item for sublist in df.art.values for item in sublist])
     team_frt = np.asarray(df.frt.values.astype('timedelta64[s]'))
-    summary = teacher_df(unique_teacher_names, ytd, df, team_rt, team_frt, summary)
+    summary = teacher_df(unique_teacher_names, ytd, df, team_rt, team_frt, summary, lead_name)
     summary = summary[['Name','Team','FRT Median','ART Median','Math Terms Per Session',
      'Appropriate Phrase Per Session','Student Response Length',
      'Teacher Response Length','Student to Teacher Exchange Ratio',
@@ -33,9 +33,10 @@ def call_func(num_transcripts, df, desired_num_interactions, summary):
 """Input Variables"""
 num_transcripts = 50
 desired_num_interactions = 3
+lead_name = "Jeremy"
 #os.system('attrib +H *.pyc /S') #Hides .pyc file in directory
-df = pd.read_csv('data_source/jeremyteam.csv')
+df = pd.read_csv('data_source/krist.csv')
 df.rename(columns={'teacher name': 'name'}, inplace=True)
 summary = pd.DataFrame()
 
-call_func(num_transcripts, df, desired_num_interactions,summary)
+call_func(num_transcripts, df, desired_num_interactions,summary,lead_name)
