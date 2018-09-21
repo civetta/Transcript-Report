@@ -3,6 +3,7 @@ from openpyxl.styles import Font, colors, Alignment, PatternFill
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.utils import get_column_letter
 import pandas as pd
+import datetime
 
 """Patest the marked_lines column into each column in an excel sheet"""
 
@@ -38,7 +39,8 @@ def for_line_in_rt_ws(rt_ws, trans_df, column, student_handle):
         timestamp_cell = rt_ws.cell(row=row+2, column=column)
         time = line
         if "-TR" in str(time):
-            time = time[6:-3]
+            time = int(time[:time.index('.0-TR')])
+            time = str(datetime.timedelta(seconds=time))
             if FRT == 'Not Found':
                 active_cell.font = Font(color=colors.BLUE,bold=True)
                 timestamp_cell.font = Font(color=colors.BLUE,bold=True)
@@ -54,7 +56,7 @@ def for_line_in_rt_ws(rt_ws, trans_df, column, student_handle):
                 Student_First_Response = "Found"
             time = trans_df.rt.loc[row]
             #By making it a string, excel will automatically align it to the left of cell
-            active_cell.value = (str(time)[6:])
+            active_cell.value = (str(time)[6:]).strip()
         stamp = "  "+trans_df.Handle.loc[row]+" "+str(trans_df.Time_Stamps.loc[row])
         timestamp_cell.value = stamp
         
