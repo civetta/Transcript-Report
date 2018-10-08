@@ -76,14 +76,15 @@ def paste_transcript(row, ws):
     trans_df = row.transcript_info
     item_number = str(row.item_number)
     trans_df = pd.DataFrame(trans_df)
+    reason = row['reason']
     if ws.cell(row=1, column=1).value is None:
         column = 1
     else:
         column = ws.max_column+1
     if wb_boolean is True:
-        transcript_title = lesson_name +" - "+item_number+ " -Whiteboard Used"
+        transcript_title = lesson_name +" - "+item_number+" - "+reason+ " -Whiteboard Used"
     else:
-        transcript_title = lesson_name +" - "+item_number
+        transcript_title = lesson_name +" - "+item_number+" - "+reason
     ws.cell(row=1, column=column, value=transcript_title).font=Font(bold=True)
     ws.column_dimensions[get_column_letter(column)].width = int(70)
     for_line_in_transcript(trans_df, ws, column)

@@ -29,7 +29,7 @@ def call_func(num_transcripts, df, desired_num_interactions, summary, lead_name)
      'Teacher Response Length','Student to Teacher Exchange Ratio',
      'Average Session Length(minutes)',
      'Average Session Length(seconds)','Date']]
-    save_management(summary)
+    #save_management(summary)
 
 
 def save_management(summary):
@@ -48,11 +48,11 @@ def save_management(summary):
 """Input Variables"""
 #Appends team data to already existing management csv file.
 combine_management_summaries = True
-num_transcripts = 50
+num_transcripts = 3
 desired_num_interactions = 3
 lead_name = 'Caren'
 #os.system('attrib +H *.pyc /S') #Hides .pyc file in directory
-df = pd.read_csv('data_source/caren_sept.csv')
+df = pd.read_csv('data_source/test_transcripts4.csv')
 df.rename(columns={'teacher name': 'name'}, inplace=True)
 
 summary = pd.DataFrame()
