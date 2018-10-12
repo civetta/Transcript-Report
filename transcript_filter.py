@@ -61,7 +61,7 @@ def find_keyboard_bool(df):
     find_talk =  r"(\n|^)((?!(Ms|Mrs|Miss|Mr|Ms|Server Notice)(\s|\.)).*((?P<FULL>(?=)(Talk|voice|speak|spek|talkk|taalk|tack))))"
     df['keyboard_boolean'] = df['transcript'].str.extract(find_talk,flags = re.IGNORECASE).FULL
     df['keyboard_boolean'].fillna(True, inplace=True)
-    df['keyboard_boolean'] =df['keyboard_boolean'].map(lambda x: x is not True)
+    df['keyboard_boolean'] =df['keyboard_boolean'].map(lambda x: x is True)
     #Drops all False "typing sessions"
     df = df[df['keyboard_boolean']]
     return df

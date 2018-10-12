@@ -82,9 +82,9 @@ def paste_transcript(row, ws):
     else:
         column = ws.max_column+1
     if wb_boolean is True:
-        transcript_title = lesson_name +" - "+item_number+" - "+reason+ " -Whiteboard Used"
+        transcript_title = str(lesson_name) +" - "+str(item_number)+" - "+str(reason)+ " -Whiteboard Used"
     else:
-        transcript_title = lesson_name +" - "+item_number+" - "+reason
+        transcript_title = str(lesson_name) +" - "+str(item_number)+" - "+str(reason)
     ws.cell(row=1, column=column, value=transcript_title).font=Font(bold=True)
     ws.column_dimensions[get_column_letter(column)].width = int(70)
     for_line_in_transcript(trans_df, ws, column)
