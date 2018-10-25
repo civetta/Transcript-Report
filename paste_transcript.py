@@ -71,12 +71,21 @@ def paste_transcript(row, ws):
     --Whiteboard Used at the end of the lesson name. This is placed in the
     first row in the column. It then passes the trans_df into for_line_in
     _transcript function"""
+
     wb_boolean = row.wb_boolean
     lesson_name = row.lesson_name
     trans_df = row.transcript_info
+    
+    
     item_number = str(row.item_number)
+    if item_number == 'nan':
+        item_number = ""
+    else:
+        item_number=int(float(item_number))    
     trans_df = pd.DataFrame(trans_df)
-    reason = row['reason']
+    reason = str(row['reason'])
+    if reason == 'nan':
+        reason = ""
     if ws.cell(row=1, column=1).value is None:
         column = 1
     else:
@@ -85,8 +94,13 @@ def paste_transcript(row, ws):
         transcript_title = str(lesson_name) +" - "+str(item_number)+" - "+str(reason)+ " -Whiteboard Used"
     else:
         transcript_title = str(lesson_name) +" - "+str(item_number)+" - "+str(reason)
-    ws.cell(row=1, column=column, value=transcript_title).font=Font(bold=True)
-    ws.column_dimensions[get_column_letter(column)].width = int(70)
+    title_cell = ws.cell(row=1, column=column)
+    wrap_alignment = Alignment(wrap_text=True)
+    title_cell.alignment = wrap_alignment
+    title_cell.value = transcript_title
+    title_cell.font = Font(bold=True)
+    #ws.cell(row=1, column=column, value=transcript_title).font=Font(bold=True)
+    ws.column_dimensions[get_column_letter(column)].width = int(90)
     for_line_in_transcript(trans_df, ws, column)
 
 

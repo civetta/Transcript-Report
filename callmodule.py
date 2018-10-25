@@ -50,9 +50,9 @@ def save_management(summary):
 combine_management_summaries = True
 num_transcripts = 50
 desired_num_interactions = 3
-lead_name = 'Caren'
+lead_name = 'Jeremy'
 #os.system('attrib +H *.pyc /S') #Hides .pyc file in directory
-df = pd.read_csv('data_source/r1_testing.csv')
+df = pd.read_csv('data_source/Jeremy_Oct.csv')
 df.rename(columns={'teacher name': 'name'}, inplace=True)
 
 summary = pd.DataFrame()

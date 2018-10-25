@@ -58,7 +58,7 @@ def find_keyboard_bool(df):
     """Looks for a line that does NOT contain a teacher/server (so a student) 
     and also contains talk, voice, speak, etc. If does not contain it
     then type_boolean is made to be True.""" 
-    find_talk =  r"(\n|^)((?!(Ms|Mrs|Miss|Mr|Ms|Server Notice)(\s|\.)).*((?P<FULL>(?=)(Talk|voice|speak|spek|talkk|taalk|tack))))"
+    find_talk =  r"(\n|^)((?!(Ms|Mrs|Miss|Mr|Ms|Server Notice)(\s|\.)).*((?P<FULL>(?=)(Talk|voice|tak|speak|spek|talkk|taalk|tack))))"
     df['keyboard_boolean'] = df['transcript'].str.extract(find_talk,flags = re.IGNORECASE).FULL
     df['keyboard_boolean'].fillna(True, inplace=True)
     df['keyboard_boolean'] =df['keyboard_boolean'].map(lambda x: x is True)
