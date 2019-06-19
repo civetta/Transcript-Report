@@ -27,12 +27,14 @@ def filtered_transcripts(df, num_transcripts, desired_num_interactions):
      """
     df['transcript'].replace('', np.nan, inplace=True)
     df.dropna(subset=['transcript'], inplace=True)
+    df = df[~df['transcript'].str.contains("Classifier @ ")]
     df = find_handles(df)
     df = find_keyboard_bool(df)
     df['number_of_interactions'] = df.apply(active_session, axis=1)
     df['active_session'] = df['number_of_interactions'].map(lambda x: x >= desired_num_interactions)
     df = filter(df, num_transcripts, desired_num_interactions)
     df['wb_boolean'] = df['wb_message_count'].map(lambda x: x>3)
+
     return df
 
 
@@ -95,12 +97,12 @@ def filter(df, num_transcripts, desire_interaction):
     filtered_df = pd.DataFrame()
     teacher_real_names = df['name']
     unique_teacher_names = list(set(teacher_real_names))
-    
     for teachername in unique_teacher_names:
         #creates a df for each teacher only containing their transcripts.
         teacher_df = df[(df.name == teachername)]
         #Quickest way to remove all False active_sessions.
         teacher_df = teacher_df[teacher_df.active_session]
+        
     
         try:
             teacher_df = teacher_df.sample(n=num_transcripts)
@@ -110,8 +112,7 @@ def filter(df, num_transcripts, desire_interaction):
         #Cleans teacher df and appends to final filtered_df
         teacher_df = teacher_df.reset_index()
         filtered_df = filtered_df.append(teacher_df)
-    
-    filtered_df = filtered_df.reset_index(drop=True)    
+        filtered_df = filtered_df.reset_index(drop=True)    
     return filtered_df
 
 

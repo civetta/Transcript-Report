@@ -75,8 +75,8 @@ def paste_transcript(row, ws):
     wb_boolean = row.wb_boolean
     lesson_name = row.lesson_name
     trans_df = row.transcript_info
-    
-    
+    session_length = row.session_length_secs
+    session_length_format = str(datetime.timedelta(seconds=session_length))
     item_number = str(row.item_number)
     if item_number == 'nan':
         item_number = ""
@@ -91,9 +91,9 @@ def paste_transcript(row, ws):
     else:
         column = ws.max_column+1
     if wb_boolean is True:
-        transcript_title = str(lesson_name) +" - "+str(item_number)+" - "+str(reason)+ " -Whiteboard Used"
+        transcript_title = str(lesson_name) +" - "+str(item_number)+" - "+str(reason)+" - "+session_length_format+ " -Whiteboard Used"
     else:
-        transcript_title = str(lesson_name) +" - "+str(item_number)+" - "+str(reason)
+        transcript_title = str(lesson_name) +" - "+str(item_number)+" - "+str(reason)+" - "+session_length_format
     title_cell = ws.cell(row=1, column=column)
     wrap_alignment = Alignment(wrap_text=True)
     title_cell.alignment = wrap_alignment
@@ -124,7 +124,7 @@ def for_line_in_transcript(trans_df, ws, column):
             line = line.replace('--GREY OUT', "")
             grayFill = PatternFill("solid", fgColor="efefef")
             active_cell.fill = grayFill
-        active_cell.alignment =  active_cell.alignment.copy(wrapText=True) 
+        active_cell.alignment =  Alignment(wrap_text=True)
         active_cell.value = line
          
         

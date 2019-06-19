@@ -25,6 +25,8 @@ def create_transcript_df(row, teach_handle, stud_handle, transcript):
             return True
         if x == teach_handle:
             return False 
+        else:
+            return None
 
     transcript = transcript[transcript.index(teach_handle):]
     trans_df = pd.DataFrame({'Transcript': transcript.split('\n')})        
@@ -37,9 +39,18 @@ def create_transcript_df(row, teach_handle, stud_handle, transcript):
     trans_df['rt_paste'] = trans_df["Teacher_Response"].map(lambda x: str(x)+'-TR' if pd.isnull(x) is False else x)
     trans_df['rt_paste'] = trans_df.rt_paste.combine_first(trans_df.rt)
     trans_df = create_marked_lines(trans_df)
+    trans_df['has_drag_drop']= trans_df.apply(has_drag_drop, axis=1)
     trans_df.to_csv('Trans_df.csv')
     return trans_df
 
+
+
+def has_drag_drop(row):
+    line = row.Transcript
+    if row.Student_Bool is False:
+        if "[Image]" in line:
+            return True
+    return False
 
 def create_timestamp(line):
     """Makes timestamps easier to read"""

@@ -35,6 +35,7 @@ def create_marked_line(row):
     return line
 
 
+
 def grey_out(trans_df):
     """If a teacher talks 3 or more times in a row, then --GREY OUT is placed
     at the end of the line in the transcript. This is so when pasting into 

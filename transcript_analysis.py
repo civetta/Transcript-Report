@@ -20,7 +20,7 @@ def find_transcript_data(row):
     #Finding student to teacher ratio, round to nearest hundreth.
     exchange_ratio = round(trans_df.Student_Bool.sum()/float((trans_df['Student_Bool']==False).sum()),2)
     #returns all of the data found above, place in new columns under plain df.
-    return trans_df.to_dict(), frt, rt, trans_df.vocab_count.sum(), vocab_list, trans_df.approp_count.sum(), session_length_secs, student_response, teacher_response, exchange_ratio
+    return trans_df.to_dict(), frt, rt, trans_df.vocab_count.sum(), vocab_list, trans_df.approp_count.sum(), session_length_secs, student_response, teacher_response, exchange_ratio,trans_df.has_drag_drop.sum()
 
 
 def rt_data(trans_df):
