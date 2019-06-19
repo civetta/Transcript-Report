@@ -42,7 +42,7 @@ def save_management(summary):
     mydate = datetime.now()
     month = mydate.strftime("%b")
     ms_filename = 'Management Summary-'+month+'.csv'
-    path = 'C:\Users\kelly.richardson\OneDrive - Imagine Learning Inc\Reports\Transcript Reports\Management Summaries'
+    path = 'C:\\Users\kelly.richardson\OneDrive - Imagine Learning Inc\Reports\Transcript Reports\Management Summaries'
     ms_path = os.path.join(path,ms_filename)
     if combine_management_summaries is False:
         summary.to_csv(ms_path,index=False)
@@ -54,7 +54,7 @@ def save_management(summary):
 """Input Variables"""
 #Appends team data to already existing management csv file.
 combine_management_summaries = False
-num_transcripts = 5
+num_transcripts = 50
 desired_num_interactions = 3
 lead_name = "march_caren"
 debug = True

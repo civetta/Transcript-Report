@@ -37,7 +37,7 @@ def teacher_df(unique_teacher_names, ytd, df, team_rt, team_frt, summary, lead_n
         
         mydate = datetime.now()
         month = mydate.strftime("%b")
-        path = 'C:\Users\kelly.richardson\OneDrive - Imagine Learning Inc\Reports\Transcript Reports'
+        path = 'C:\\Users\kelly.richardson\OneDrive - Imagine Learning Inc\Reports\Transcript Reports'
         file_name = teachername+"_"+month+'-Transcript Report.xlsx'
         save_location = os.path.join(path,lead_name,teachername)
         if not os.path.isdir(save_location):

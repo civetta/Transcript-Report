@@ -14,7 +14,7 @@ def teacher_df(unique_teacher_names, ytd, df, team_rt, team_frt, summary, lead_n
     """Creates a df for each teacher and sends it over to all of the paste
     functions to paste into excel"""
     for teachername in unique_teacher_names:
-        print teachername
+        print(teachername)
         row_in_ytd = ytd.loc[ytd['teacherName'] == teachername]
         teacherbook, ws, rt_ws = create_teacherbook()
 
@@ -29,11 +29,6 @@ def teacher_df(unique_teacher_names, ytd, df, team_rt, team_frt, summary, lead_n
         paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws, row_in_ytd, teacherbook)
         teacher_df['visual_used'] = teacher_df.wb_boolean + teacher_df.has_drag_drop
         teacher_df['visual_used'] = teacher_df.visual_used.apply(lambda x: True if x >= 1 else False)
-        
-        print ("Whiteboard: "+str(teacher_df.visual_used.sum()))
-        print ("")
-        if teachername == "Kelly Richardson":
-            time.sleep(10)
 
         teacher_df.apply(paste_transcript, args=(ws, ), axis=1)
         teacher_df.apply(paste_response, args=(rt_ws, ), axis=1)      

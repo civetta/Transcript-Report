@@ -19,7 +19,7 @@ def paste_response(row, rt_ws):
         column = 7
     else:
         column = rt_ws.max_column+1
-    title = 'Transcript '+(get_column_letter((column-4)/2))
+    title = 'Transcript '+(get_column_letter(int((column-4)/2)))
     rt_ws.cell(row=1, column=column).value = title
     rt_ws.cell(row=1, column=column).font = Font(bold=True)    
     rt_ws.column_dimensions[get_column_letter(column)].width = int(35)
