@@ -19,7 +19,7 @@ def call_func(num_transcripts, df, desired_num_interactions, summary, lead_name,
     df = filtered_transcripts(df, num_transcripts, desired_num_interactions)
     """Creating a DF for each teacher and then going through each row to create
     an individual Transcript DF."""
-    df['transcript_info'], df['frt'], df['art'], df['vocab_count'], df['vocab'], df['approp_count'], df['session_length_secs'], df['avg_teacher_response_length'], df['avg_student_response_length'], df['exchange_ratio'], df['has_drag_drop'] = list(zip(*df.apply(find_transcript_data, axis=1)))
+    df['transcript_info'], df['frt'], df['art'], df['vocab_count'], df['vocab'], df['approp_count'], df['session_length_secs'], df['avg_teacher_response_length'], df['avg_student_response_length'], df['exchange_ratio'], df['has_drag_drop'] = zip(*df.apply(find_transcript_data, axis=1))
     #------The Original DF Has All of the Columns Nesscary After This Point.
     teacher_real_names = df.name
     unique_teacher_names = list(set(teacher_real_names))
@@ -38,7 +38,7 @@ def call_func(num_transcripts, df, desired_num_interactions, summary, lead_name,
 
 
 def save_management(summary):
-    print("Starting to Save Management")
+    print "Starting to Save Management"
     mydate = datetime.now()
     month = mydate.strftime("%b")
     ms_filename = 'Management Summary-'+month+'.csv'

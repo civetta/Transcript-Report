@@ -18,7 +18,7 @@ def get_data():
      
     #Check for HTTP codes other than 200
     if response.status_code != 200: 
-        print(('Status:', response.status_code, 'Headers:', response.headers, 'Error Response:',response.json()))
+        print('Status:', response.status_code, 'Headers:', response.headers, 'Error Response:',response.json())
         exit()
 
     #Decode the JSON response into a dictionary and use the data

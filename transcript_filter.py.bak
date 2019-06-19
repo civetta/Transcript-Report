@@ -107,8 +107,8 @@ def filter(df, num_transcripts, desire_interaction):
         try:
             teacher_df = teacher_df.sample(n=num_transcripts)
         except ValueError:
-            print(teacher_df.shape)
-            print("WARNING "+ teachername +" does not have enough transcripts that meet the criteria.")
+            print teacher_df.shape
+            print"WARNING "+ teachername +" does not have enough transcripts that meet the criteria."
         #Cleans teacher df and appends to final filtered_df
         teacher_df = teacher_df.reset_index()
         filtered_df = filtered_df.append(teacher_df)
