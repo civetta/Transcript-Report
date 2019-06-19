@@ -31,7 +31,7 @@ def call_func(num_transcripts, df, desired_num_interactions, summary, lead_name,
      'Appropriate Phrase Per Session','Student Response Length',
      'Teacher Response Length','Student to Teacher Exchange Ratio',
      'Average Session Length(minutes)',
-     'Average Session Length(seconds)','Whiteboard Count','Date']]
+     'Average Session Length(seconds)','Visuals Count','Date']]
     #print summary
     if debug is False:
         save_management(summary)
@@ -54,12 +54,12 @@ def save_management(summary):
 """Input Variables"""
 #Appends team data to already existing management csv file.
 combine_management_summaries = False
-num_transcripts = 50
-desired_num_interactions = 7
-lead_name = "northside"
+num_transcripts = 5
+desired_num_interactions = 3
+lead_name = "march_caren"
 debug = True
 #os.system('attrib +H *.pyc /S') #Hides .pyc file in directory
-df = pd.read_csv('data_source/Northside.csv')
+df = pd.read_csv('data_source/march_caren.csv')
 df.rename(columns={'teacher name': 'name'}, inplace=True)
 
 summary = pd.DataFrame()
