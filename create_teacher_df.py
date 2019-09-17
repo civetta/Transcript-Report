@@ -10,12 +10,15 @@ from datetime import datetime
 import time
 
 
-def teacher_df(unique_teacher_names, ytd, df, team_rt, team_frt, summary, lead_name, debug):
+def teacher_df(unique_teacher_names, df, team_rt, team_frt, summary, lead_name, debug, yeardata):
     """Creates a df for each teacher and sends it over to all of the paste
     functions to paste into excel"""
+    yeardata.set_index("name", inplace=True)
     for teachername in unique_teacher_names:
-        print(teachername)
-        row_in_ytd = ytd.loc[ytd['teacherName'] == teachername]
+        
+        
+        teacher_yeardata = yeardata.loc[teachername]
+        print (teacher_yeardata)
         teacherbook, ws, rt_ws = create_teacherbook()
 
         #Creates teacher_df, which is a df of just a single teacher transcripts.
@@ -26,7 +29,7 @@ def teacher_df(unique_teacher_names, ytd, df, team_rt, team_frt, summary, lead_n
         teacher_rt = np.asarray([item for sublist in teacher_df.art.values for item in sublist])
         teacher_frt = np.asarray(teacher_df.frt.values.astype('timedelta64[s]'))
         #Pastes everything for each personal teacherbook.
-        paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws, row_in_ytd, teacherbook)
+        paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws, teacherbook,teacher_yeardata)
         teacher_df['visual_used'] = teacher_df.wb_boolean + teacher_df.has_drag_drop
         teacher_df['visual_used'] = teacher_df.visual_used.apply(lambda x: True if x >= 1 else False)
 

@@ -12,7 +12,7 @@ or not, using the whiteboard_count (these numbers represent the number of
 times a teacher interacts with the whiteboard. So a number of at least 3 means a
 teacher opened it up, and drew something)."""
 
-def filtered_transcripts(df, num_transcripts, desired_num_interactions):
+def filtered_transcripts(df3, num_transcripts, desired_num_interactions):
     """Takes the column 'transcript' drops all of the empty rows. Then it 
     calls the functions to create new columns. Find_handles, find_type_bool, (
     type as in did the student type or not, not type as in object type). 
@@ -25,17 +25,18 @@ def filtered_transcripts(df, num_transcripts, desired_num_interactions):
     num_transcripts: integer
     desired_num_interactions: integer
      """
-    df['transcript'].replace('', np.nan, inplace=True)
-    df.dropna(subset=['transcript'], inplace=True)
-    df = df[~df['transcript'].str.contains("Classifier @ ")]
-    df = find_handles(df)
-    df = find_keyboard_bool(df)
-    df['number_of_interactions'] = df.apply(active_session, axis=1)
-    df['active_session'] = df['number_of_interactions'].map(lambda x: x >= desired_num_interactions)
-    df = filter(df, num_transcripts, desired_num_interactions)
-    df['wb_boolean'] = df['wb_message_count'].map(lambda x: x>3)
+    print (df3.columns)
+    df3['transcript'].replace('', np.nan, inplace=True)
+    df3.dropna(subset=['transcript'], inplace=True)
+    df3 = df3[~df3['transcript'].str.contains("Classifier @ ")]
+    df3 = find_handles(df3)
+    df3 = find_keyboard_bool(df3)
+    df3['number_of_interactions'] = df3.apply(active_session, axis=1)
+    df3['active_session'] = df3['number_of_interactions'].map(lambda x: x >= desired_num_interactions)
+    df3 = filter(df3, num_transcripts, desired_num_interactions)
+    df3['wb_boolean'] = df3['wb_message_count'].map(lambda x: x>3)
 
-    return df
+    return df3
 
 
 

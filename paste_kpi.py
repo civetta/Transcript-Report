@@ -8,7 +8,7 @@ the team FRT, teacher FRT, teacher ART, and Team ART. Then it generates charts
 for easy comparison"""
 
 
-def paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws, row_in_ytd, teacherbook):
+def paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws, teacherbook,yeardata):
     """Creates a KPI dictionary with teacher stats,
      makes it into a dataframe, and then pastes the df into excel. Then it 
      calls ytd from the Admin Dashboard website"""
@@ -24,11 +24,10 @@ def paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws, row_in_ytd, tea
     rt_ws.cell(row=3, column=3, value=np.median(team_rt).astype(int))
     rt_ws.column_dimensions['A'].width = int(35)
     create_box_chart(rt_ws)
-    teacherbook.save('test3.xlsx')
     rt_ws.cell(row=6, column=1, value="YTD Session Taught")
-    rt_ws.cell(row=6, column=2, value=int(row_in_ytd['sessionCount']))
+    rt_ws.cell(row=6, column=2, value=int(yeardata[0]))
     rt_ws.cell(row=7, column=1, value="YTD Avg Session Length (minutes)")
-    rt_ws.cell(row=7, column=2, value=round(float((row_in_ytd['averageSessionTime'])/60), 2))
+    rt_ws.cell(row=7, column=2, value=round(float((yeardata[1])/60), 2))
 
 def create_box_chart(rt_ws):
     """Uses openpyxl built in library to creates box charts of
