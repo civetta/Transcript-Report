@@ -25,7 +25,6 @@ def filtered_transcripts(df3, num_transcripts, desired_num_interactions):
     num_transcripts: integer
     desired_num_interactions: integer
      """
-    print (df3.columns)
     df3['transcript'].replace('', np.nan, inplace=True)
     df3.dropna(subset=['transcript'], inplace=True)
     df3 = df3[~df3['transcript'].str.contains("Classifier @ ")]

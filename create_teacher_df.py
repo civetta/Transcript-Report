@@ -18,7 +18,6 @@ def teacher_df(unique_teacher_names, df, team_rt, team_frt, summary, lead_name, 
         
         
         teacher_yeardata = yeardata.loc[teachername]
-        print (teacher_yeardata)
         teacherbook, ws, rt_ws = create_teacherbook()
 
         #Creates teacher_df, which is a df of just a single teacher transcripts.
@@ -40,7 +39,8 @@ def teacher_df(unique_teacher_names, df, team_rt, team_frt, summary, lead_name, 
         
         mydate = datetime.now()
         month = mydate.strftime("%b")
-        path = 'C:\\Users\kelly.richardson\OneDrive - Imagine Learning Inc\Reports\Transcript Reports'
+        #path = 'C:\\Users\kelly.richardson\OneDrive - Imagine Learning Inc\Reports\Transcript Reports'
+        path = 'C:\\Users\kelly.richardson\OneDrive - Imagine Learning Inc\GitHub\Transcript-Report\\teacher_sheets'
         file_name = teachername+"_"+month+'-Transcript Report.xlsx'
         save_location = os.path.join(path,lead_name,teachername)
         if not os.path.isdir(save_location):
