@@ -12,8 +12,10 @@ def paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws, teacherbook,yea
     """Creates a KPI dictionary with teacher stats,
      makes it into a dataframe, and then pastes the df into excel. Then it 
      calls ytd from the Admin Dashboard website"""
+     
     print(("FRT: "+str(np.median(teacher_frt).astype(int))))
     print(("ART: "+str(np.median(teacher_rt).astype(int))))
+    print ("")
     rt_ws.cell(row=2, column=1, value='FRT Median')
     rt_ws.cell(row=3, column=1, value='ART Median')
     rt_ws.cell(row=1, column=2, value='Teacher')

@@ -16,7 +16,7 @@ def teacher_df(unique_teacher_names, df, team_rt, team_frt, summary, lead_name, 
     yeardata.set_index("name", inplace=True)
     for teachername in unique_teacher_names:
         
-        
+        print (teachername)
         teacher_yeardata = yeardata.loc[teachername]
         teacherbook, ws, rt_ws = create_teacherbook()
 

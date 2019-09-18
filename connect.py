@@ -119,7 +119,7 @@ and Cast(starterdate.date as date) between"""+start_date+""" and"""+end_date
   df = pd.read_sql_query(sql,conn)
   return df
 
-def warehouseyeardata ():
+def warehouseyeardata (end_date):
   from datetime import datetime
   end_date = datetime.today().strftime('%Y-%m-%d')
   conn = psycopg2.connect("dbname='warehouse' user='kellyrichardson'  password='8b3c9XFGLj3FiSnQvzfJx' host='im-warehouse-prod.cfozmy0xza77.us-west-2.rds.amazonaws.com'")
@@ -131,7 +131,7 @@ left join teachers on live_help_facts.teacher_id = teachers.id
 left join dates on live_help_facts.utc_completed_date_id = dates.id
 
 WHERE email LIKE '%liveteacher%'
-and Cast(dates.date as Date) between '2019-08-20' and '2019-09-16'
+and Cast(dates.date as Date) between '2019-08-20' and '"""+end_date+"""'
 and transcript  is not NULL)
 
 select name, Avg(Average_Session_Time), count(transcript) from source group by name"""
