@@ -43,9 +43,9 @@ def save_management(summary):
     print("Starting to Save Management")
     mydate = datetime.now()
     month = mydate.strftime("%b")
-    ms_filename = 'Management Summary-'+month+'.csv'
-    #path = 'C:\\Users\kelly.richardson\OneDrive - Imagine Learning Inc\Reports\Transcript Reports\Management Summaries'
-    path = 'C:\\Users\kelly.richardson\OneDrive - Imagine Learning Inc\GitHub\Transcript-Report\\teacher_sheets\management'
+    ms_filename = 'Management Summary-'+month+'-2019.csv'
+    path = 'C:\\Users\kelly.richardson\OneDrive - Imagine Learning Inc\Reports\Transcript Reports\Management Summaries'
+    #path = 'C:\\Users\kelly.richardson\OneDrive - Imagine Learning Inc\GitHub\Transcript-Report\\teacher_sheets\management'
     ms_path = os.path.join(path,ms_filename)
     if os.path.exists(ms_path):
         ms = pd.read_csv(ms_path)
@@ -57,18 +57,19 @@ def save_management(summary):
 """Input Variables"""
 #Appends team data to already existing management csv file.
 combine_management_summaries = False
-num_transcripts = 25
-desired_num_interactions = 7
+num_transcripts = 50
+desired_num_interactions = 3
 
 debug = False
 start_date = "'2019-08-20'"
-end_date = "'2019-09-18'"
-end_date2 = '2019-09-18'
+end_date = "'2019-09-19'"
+end_date2 = '2019-09-19'
 print (end_date)
-yeardata = warehouseyeardata(end_date2) 
 #os.system('attrib +H *.pyc /S') #Hides .pyc file in directory
 df = get_warehouse_data(start_date, end_date)
 teams = df.team.unique()
+teams = ['Rachel', 'Melissa','Gabby','Laura', 'Kristin', 'Sara']
+
 df.set_index('team', inplace=True)
 summary = pd.DataFrame()
 for lead_name in teams:
@@ -76,6 +77,8 @@ for lead_name in teams:
     
     yeardata = warehouseyeardata(end_date) 
     call_func(num_transcripts, team_df, desired_num_interactions,summary,lead_name, debug, yeardata)
+    print (lead_name + " Team Transcripts Complete")
+    print ("")
 
 
 

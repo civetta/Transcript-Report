@@ -28,7 +28,7 @@ def teacher_df(unique_teacher_names, df, team_rt, team_frt, summary, lead_name, 
         teacher_rt = np.asarray([item for sublist in teacher_df.art.values for item in sublist])
         teacher_frt = np.asarray(teacher_df.frt.values.astype('timedelta64[s]'))
         #Pastes everything for each personal teacherbook.
-        paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws, teacherbook,teacher_yeardata)
+        paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws, teacherbook,teacher_yeardata,teachername)
         teacher_df['visual_used'] = teacher_df.wb_boolean + teacher_df.has_drag_drop
         teacher_df['visual_used'] = teacher_df.visual_used.apply(lambda x: True if x >= 1 else False)
 
@@ -39,9 +39,9 @@ def teacher_df(unique_teacher_names, df, team_rt, team_frt, summary, lead_name, 
         
         mydate = datetime.now()
         month = mydate.strftime("%b")
-        #path = 'C:\\Users\kelly.richardson\OneDrive - Imagine Learning Inc\Reports\Transcript Reports'
-        path = 'C:\\Users\kelly.richardson\OneDrive - Imagine Learning Inc\GitHub\Transcript-Report\\teacher_sheets'
-        file_name = teachername+"_"+month+'-Transcript Report.xlsx'
+        path = 'C:\\Users\kelly.richardson\OneDrive - Imagine Learning Inc\Reports\Transcript Reports'
+        #path = 'C:\\Users\kelly.richardson\OneDrive - Imagine Learning Inc\GitHub\Transcript-Report\\teacher_sheets'
+        file_name = teachername+"_"+month+'_2019-Transcript Report.xlsx'
         save_location = os.path.join(path,lead_name,teachername)
         if not os.path.isdir(save_location):
             os.makedirs (save_location)
