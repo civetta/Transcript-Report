@@ -61,9 +61,11 @@ num_transcripts = 25
 desired_num_interactions = 7
 
 debug = False
-start_date = "'2019-08-18'"
-end_date = "'2019-09-17'"
-yeardata = warehouseyeardata(end_date) 
+start_date = "'2019-08-20'"
+end_date = "'2019-09-18'"
+end_date2 = '2019-09-18'
+print (end_date)
+yeardata = warehouseyeardata(end_date2) 
 #os.system('attrib +H *.pyc /S') #Hides .pyc file in directory
 df = get_warehouse_data(start_date, end_date)
 teams = df.team.unique()
@@ -71,6 +73,7 @@ df.set_index('team', inplace=True)
 summary = pd.DataFrame()
 for lead_name in teams:
     team_df = df.loc[lead_name]
+    
     yeardata = warehouseyeardata(end_date) 
     call_func(num_transcripts, team_df, desired_num_interactions,summary,lead_name, debug, yeardata)
 

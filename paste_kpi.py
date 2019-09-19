@@ -12,9 +12,11 @@ def paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws, teacherbook,yea
     """Creates a KPI dictionary with teacher stats,
      makes it into a dataframe, and then pastes the df into excel. Then it 
      calls ytd from the Admin Dashboard website"""
-     
+    print (yeardata[0])
+    print (yeardata[1])
     print(("FRT: "+str(np.median(teacher_frt).astype(int))))
     print(("ART: "+str(np.median(teacher_rt).astype(int))))
+    print (("YTD Session Taught: "+str(yeardata[1])))
     print ("")
     rt_ws.cell(row=2, column=1, value='FRT Median')
     rt_ws.cell(row=3, column=1, value='ART Median')
@@ -27,9 +29,9 @@ def paste_kpi(teacher_rt, teacher_frt, team_rt, team_frt, rt_ws, teacherbook,yea
     rt_ws.column_dimensions['A'].width = int(35)
     create_box_chart(rt_ws)
     rt_ws.cell(row=6, column=1, value="YTD Session Taught")
-    rt_ws.cell(row=6, column=2, value=int(yeardata[0]))
+    rt_ws.cell(row=6, column=2, value=int(yeardata[1]))
     rt_ws.cell(row=7, column=1, value="YTD Avg Session Length (minutes)")
-    rt_ws.cell(row=7, column=2, value=round(float((yeardata[1])/60), 2))
+    rt_ws.cell(row=7, column=2, value=round(float((yeardata[0])/60), 2))
 
 def create_box_chart(rt_ws):
     """Uses openpyxl built in library to creates box charts of
